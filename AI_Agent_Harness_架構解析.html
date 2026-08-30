@@ -342,12 +342,12 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <!-- Stack visual -->
                 <div class="lg:col-span-4 layer-stack py-4">
-                    <div class="layer-card layer-1" onclick="showLayer('layer-1', this)">1. 使用者介面層 (UI/UX)</div>
+                    <div class="layer-card layer-1 active" onclick="showLayer('layer-1', this)">1. 使用者介面層 (UI/UX)</div>
                     <div class="layer-card layer-2" onclick="showLayer('layer-2', this)">2. 編排層 (Orchestration)</div>
                     <div class="layer-card layer-3" onclick="showLayer('layer-3', this)">3. 智能層 (Intelligence)</div>
                     <div class="layer-card layer-4" onclick="showLayer('layer-4', this)">4. 能力層 (Capability)</div>
                     <div class="layer-card layer-5" onclick="showLayer('layer-5', this)">5. 安全治理層 (Security)</div>
-                    <div class="layer-card layer-6 active" onclick="showLayer('layer-6', this)">6. 基礎設施層 (Infrastructure)</div>
+                    <div class="layer-card layer-6" onclick="showLayer('layer-6', this)">6. 基礎設施層 (Infrastructure)</div>
                 </div>
 
                 <!-- Detail Panel -->
@@ -355,7 +355,7 @@
                     <div class="glass-card h-full p-6 relative min-h-[400px]">
                         
                         <!-- Layer 1 Detail -->
-                        <div id="detail-layer-1" class="layer-detail hidden">
+                        <div id="detail-layer-1" class="layer-detail block">
                             <div class="flex items-center gap-3 mb-6">
                                 <div class="w-4 h-8 bg-blue-500 rounded-sm"></div>
                                 <h3 class="text-2xl font-bold text-white">1. 使用者介面層 (UI)</h3>
@@ -490,7 +490,7 @@
                         </div>
 
                         <!-- Layer 6 Detail -->
-                        <div id="detail-layer-6" class="layer-detail block">
+                        <div id="detail-layer-6" class="layer-detail hidden">
                             <div class="flex items-center gap-3 mb-6">
                                 <div class="w-4 h-8 bg-gray-500 rounded-sm"></div>
                                 <h3 class="text-2xl font-bold text-white">6. 基礎設施層 (Infrastructure)</h3>
@@ -536,12 +536,12 @@
                     <p class="text-gray-400 text-sm mb-4">不再是靜態字串，而是 6 層來源組合的動態樹。</p>
                     <div class="collapsible-content">
                         <ul class="text-sm text-gray-300 space-y-2 border-t border-gray-700 pt-4 mt-2">
-                            <li>1. 系統硬編碼基座 (System)</li>
-                            <li>2. 全域配置規則 (Global Rules)</li>
-                            <li>3. 專案級自訂 (.agentic)</li>
-                            <li>4. MCP Server 動態指令</li>
-                            <li>5. 當前會話上下文 (History)</li>
-                            <li>6. 漸進式揭露 (僅在出錯時提供詳細指導)</li>
+                            <li>1. 系統層 (System) — 基礎角色定義、安全規則</li>
+                            <li>2. 模式層 (Mode) — Coordinator / Worker / Normal 行為規範</li>
+                            <li>3. 工具層 (Tools) — 已註冊工具描述和使用規範</li>
+                            <li>4. 專案層 (Project) — Claude.md 專案級持久記憶</li>
+                            <li>5. 版本層 (Git) — 倉庫狀態快照（分支、改動檔案）</li>
+                            <li>6. 歷史層 (History) — 記憶 + 壓縮摘要的會話上下文</li>
                         </ul>
                     </div>
                     <div class="mt-auto pt-4 text-center text-teal-500 text-sm group-hover:text-teal-400">點擊展開/收起 ▼</div>
@@ -752,20 +752,33 @@ while not task_done and steps < max_steps:<br>
         </section>
 
         <!-- 9. REFERENCES -->
-        <section>
-            <details class="group bg-gray-900/50 border border-gray-800 rounded-lg cursor-pointer">
-                <summary class="p-4 font-semibold text-gray-400 hover:text-gray-300 transition-colors list-none flex justify-between items-center">
-                    <span>📚 參考文獻 & 延伸閱讀 (2025-2026)</span>
-                    <span class="transition group-open:rotate-180">▼</span>
-                </summary>
-                <div class="p-4 pt-0 text-sm text-gray-500 space-y-2 border-t border-gray-800 mt-2">
-                    <p>[1] Anthropic (2026). "The Architecture of Claude Code: Building Resilient Agent Harnesses".</p>
-                    <p>[2] Harrison Chase (2025). "From Chains to Graphs to Loops: The Evolution of LangChain".</p>
-                    <p>[3] Andrew Ng (2025). "Agentic Workflows: Why the Harness matters more than the Model".</p>
-                    <p>[4] Microsoft Research (2026). "Information Entropy Governance in Long-Context Agents".</p>
-                    <p>[5] Model Context Protocol Specification (v1.2, 2026). <a href="#" class="text-teal-600 hover:underline">https://modelcontextprotocol.io</a></p>
+        <section class="mb-16">
+            <div class="glass-card p-6">
+                <div class="flex items-center justify-between cursor-pointer" onclick="toggleRefs()">
+                    <h2 class="text-2xl font-bold text-white">📚 參考文獻</h2>
+                    <span id="ref-toggle-icon" class="text-gray-400 text-xl transition-transform duration-300">▼</span>
                 </div>
-            </details>
+                <div id="references-content" class="collapsible-content">
+                    <ol class="list-decimal list-inside text-gray-400 text-sm space-y-2 mt-4 border-t border-gray-700 pt-4">
+                        <li>和達, 陶銳, 詹國梁, 等. 智能體駕馭工程：分析 Claude Code 技術實現 [J]. 通信技術, 2026, 59(7): 779-787.</li>
+                        <li>Hashimoto M. My AI adoption journey [EB/OL]. 2026-02.</li>
+                        <li>Xi Z H, et al. The rise and potential of large language model based agents: A survey [PP/OL]. arXiv, 2023.</li>
+                        <li>Russell S J. Artificial Intelligence: A Modern Approach [M]. Pearson, 2010.</li>
+                        <li>Schulhoff S, et al. The prompt report: A systematic survey of prompting techniques [PP/OL]. arXiv, 2025.</li>
+                        <li>Rajasekaran P, et al. Effective context engineering for AI agents [EB/OL]. Anthropic, 2025.</li>
+                        <li>Jimenez C E, et al. SWE-bench: Can language models resolve real-world GitHub issues? [PP/OL]. arXiv, 2024.</li>
+                        <li>Yang J, et al. SWE-agent: Agent-computer interfaces enable automated software engineering [PP/OL]. arXiv, 2024.</li>
+                        <li>Bölük C. I improved 15 LLMs at coding in one afternoon. Only the harness changed [EB/OL]. 2026-02.</li>
+                        <li>He C Y, et al. Harness engineering for language agents [EB/OL]. ResearchGate, 2026.</li>
+                        <li>Pan L Y, et al. Natural-language agent harnesses [PP/OL]. arXiv, 2026.</li>
+                        <li>Hu Wei. Architectural Design Decisions in AI Agent Harnesses [PP/OL]. arXiv, 2026.</li>
+                        <li>Mitchell M. Complexity: A Guided Tour [M]. Oxford University Press, 2009.</li>
+                        <li>Claude Code Docs. Orchestrate teams of Claude Code sessions [EB/OL]. 2026.</li>
+                        <li>Thariq. Lessons from building Claude Code: Seeing like an agent [EB/OL]. 2026.</li>
+                        <li>OWASP. Agentic AI Threats & Mitigations Top 10 [EB/OL]. 2026.</li>
+                    </ol>
+                </div>
+            </div>
         </section>
 
     </main>
@@ -775,6 +788,18 @@ while not task_done and steps < max_steps:<br>
     </footer>
 
     <script>
+        function toggleRefs() {
+            const content = document.getElementById('references-content');
+            const icon = document.getElementById('ref-toggle-icon');
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('expanded');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
         // Timeline interactions
         function showTimelineDetail(id, element) {
             // Update active state of timeline items
