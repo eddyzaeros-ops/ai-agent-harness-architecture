@@ -70,6 +70,7 @@
 | [📁 Turn-23-to-27-UAV-F2T2EA-Killchain-v1](./Turn-23-to-27-UAV-F2T2EA-Killchain-v1) | Turn 23 ~ 27 | 無人機 F2T2EA 自主擊殺鏈實戰 Agent 與 4K 戰術資訊圖表 | md, py, pptx, assets | v1.0.0 ✅ |
 | [📁 Turn-29-UAV-F2T2EA-v2-Skills-Hooks-Lattice](./Turn-29-UAV-F2T2EA-v2-Skills-Hooks-Lattice) | Turn 29 | 無人機 F2T2EA v2 架構演進：Skills、Hooks 與 Lattice 深度模擬 | md, py, json, assets | v2.0.0 ✅ |
 | [📁 Turn-30-to-35-OWASP-LLM-Guardrail-Design](./Turn-30-to-35-OWASP-LLM-Guardrail-Design) | Turn 30 ~ 35 | OWASP Top 10 全維度 AI 護欄體系設計與 MITRE ATLAS 攻擊鍊防禦對齊 | md, docx, pptx, html, py, assets | v2.2.0 ✅ |
+| [📁 Turn-36-to-40-AI-Service-Chain-Summary-Report](./Turn-36-to-40-AI-Service-Chain-Summary-Report) | Turn 36 ~ 40 | 國防 AI 服務鏈總結報告、DeepAgents 16章研析與群暉科技建置 Proposal | md, docx, pptx, py, assets | v2.3.0 ✅ |
 
 > 💡 **版本管理與留痕規範**：各模組目錄內均附有專屬 README.md，提供嚴謹的**文件摘要**、**產出物清單**、**版本號碼標註**與**版本差異說明 (Changelog)**。
 
