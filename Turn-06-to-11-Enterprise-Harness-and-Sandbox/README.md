@@ -13,6 +13,7 @@
 ---
 
 ## 📂 檔案清單與產出物 (Artifacts Inventory)
+- [DIALOGUE_HISTORY.md](./DIALOGUE_HISTORY.md) (**本對話輪次完整對話紀錄留痕**)
 
 - docs/06-企業內部Harness環境評估.md (Markdown 核心研析文檔)
 - docs/07-Harness設計文件與資訊圖表.md (Markdown 核心研析文檔)

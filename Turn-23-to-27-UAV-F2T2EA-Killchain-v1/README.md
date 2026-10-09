@@ -13,6 +13,7 @@
 ---
 
 ## 📂 檔案清單與產出物 (Artifacts Inventory)
+- [DIALOGUE_HISTORY.md](./DIALOGUE_HISTORY.md) (**本對話輪次完整對話紀錄留痕**)
 
 - docs/23-無人機F2T2EA自主擊殺鏈Agent實作.md (Markdown 核心研析文檔)
 - docs/24-F2T2EA自主擊殺鏈資訊圖表生成.md (Markdown 核心研析文檔)

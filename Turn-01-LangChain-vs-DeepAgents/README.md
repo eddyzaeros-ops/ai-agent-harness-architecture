@@ -13,6 +13,7 @@
 ---
 
 ## 📂 檔案清單與產出物 (Artifacts Inventory)
+- [DIALOGUE_HISTORY.md](./DIALOGUE_HISTORY.md) (**本對話輪次完整對話紀錄留痕**)
 
 - docs/01-LangChain-vs-DeepAgents-架構評估.md (Markdown 核心研析文檔)
 - ssets/eval_matrix_infographic.jpg (4K 高解析度戰術與架構圖資)

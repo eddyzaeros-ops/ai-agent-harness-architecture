@@ -13,6 +13,7 @@
 ---
 
 ## 📂 檔案清單與產出物 (Artifacts Inventory)
+- [DIALOGUE_HISTORY.md](./DIALOGUE_HISTORY.md) (**本對話輪次完整對話紀錄留痕**)
 
 - docs/12-企業內部AI-Agent需求與全景架構.md (Markdown 核心研析文檔)
 - docs/13-OpenCode與ClaudeCode開源Harness對比.md (Markdown 核心研析文檔)

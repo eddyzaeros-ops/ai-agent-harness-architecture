@@ -13,6 +13,7 @@
 ---
 
 ## 📂 檔案清單與產出物 (Artifacts Inventory)
+- [DIALOGUE_HISTORY.md](./DIALOGUE_HISTORY.md) (**本對話輪次完整對話紀錄留痕**)
 
 - docs/15-五層縱深防禦架構與零信任資料流.md (Markdown 核心研析文檔)
 - docs/16-執行框架圖面錯別字與排版校正.md (Markdown 核心研析文檔)

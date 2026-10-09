@@ -13,6 +13,7 @@
 ---
 
 ## 📂 檔案清單與產出物 (Artifacts Inventory)
+- [DIALOGUE_HISTORY.md](./DIALOGUE_HISTORY.md) (**本對話輪次完整對話紀錄留痕**)
 
 - docs/29-無人機F2T2EA-v2架構演進-Skills-Hooks-Lattice.md (Markdown 核心研析文檔)
 - docs/AAR_UAV_F2T2EA_MISSION_STRIKE_REPORT_v2.md (Markdown 核心研析文檔)

@@ -13,6 +13,7 @@
 ---
 
 ## 📂 檔案清單與產出物 (Artifacts Inventory)
+- [DIALOGUE_HISTORY.md](./DIALOGUE_HISTORY.md) (**本對話輪次完整對話紀錄留痕**)
 
 - docs/02-Opus-深度研析與概念總結.md (Markdown 核心研析文檔)
 - docs/03-Opus-續研與架構深化.md (Markdown 核心研析文檔)

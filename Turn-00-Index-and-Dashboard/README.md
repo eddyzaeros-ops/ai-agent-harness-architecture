@@ -13,6 +13,7 @@
 ---
 
 ## 📂 檔案清單與產出物 (Artifacts Inventory)
+- [DIALOGUE_HISTORY.md](./DIALOGUE_HISTORY.md) (**本對話輪次完整對話紀錄留痕**)
 
 - docs/00-Index-AI-Agent-Framework-知識圖譜總覽.md (Markdown 核心研析文檔)
 - html/index.html (互動視覺化 / 報告 HTML)
