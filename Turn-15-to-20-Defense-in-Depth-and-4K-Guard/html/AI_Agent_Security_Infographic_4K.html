@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>AI Agent 安全架構與縱深防禦全景圖</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    width: 3840px;
+    height: 2160px;
+    background-color: #FFFFFF;
+    background-image: 
+      radial-gradient(#e2e8f0 1.6px, transparent 1.6px),
+      radial-gradient(#f8fafc 1.6px, #FFFFFF 1.6px);
+    background-size: 48px 48px;
+    background-position: 0 0, 24px 24px;
+    font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+    color: #0f172a;
+    display: flex;
+    flex-direction: column;
+    padding: 44px 60px;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 頂部標題區 - 特大字體 */
+  .header {
+    height: 165px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid #e2e8f0;
+    padding-bottom: 24px;
+    margin-bottom: 26px;
+    flex-shrink: 0;
+  }
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .title-text {
+    font-size: 76px;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: 1px;
+  }
+
+  .title-tag {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: 900;
+    padding: 8px 30px;
+    border-radius: 40px;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+  }
+
+  .header-subtitle {
+    font-size: 34px;
+    font-weight: 800;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .header-badges {
+    display: flex;
+    gap: 20px;
+  }
+
+  .badge-item {
+    background: #ffffff;
+    border: 3.5px solid #cbd5e1;
+    border-radius: 20px;
+    padding: 16px 30px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 28px;
+    font-weight: 900;
+    color: #1e293b;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+  }
+
+  .badge-item.active {
+    background: #eff6ff;
+    border-color: #2563eb;
+    color: #1d4ed8;
+  }
+
+  /* 主體三大板塊佈局 */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1020px 1680px 1020px;
+    gap: 30px;
+    height: 1530px;
+    flex-shrink: 0;
+  }
+
+  /* 面板卡片共用 */
+  .section-card {
+    background: #ffffff;
+    border: 3.5px solid #e2e8f0;
+    border-radius: 32px;
+    padding: 26px 28px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.06);
+    position: relative;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+    border-bottom: 3.5px solid #f1f5f9;
+  }
+
+  .header-title-box {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .icon-square {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    flex-shrink: 0;
+  }
+
+  .title-primary {
+    font-size: 44px;
+    font-weight: 900;
+    color: #0f172a;
+  }
+
+  .header-subbadge {
+    background: #f1f5f9;
+    border: 2px solid #cbd5e1;
+    color: #334155;
+    font-size: 24px;
+    font-weight: 900;
+    padding: 8px 24px;
+    border-radius: 30px;
+  }
+
+  /* 左欄：Harness 治理外框 (6大閘門) */
+  .gates-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    position: relative;
+  }
+
+  .gate-pipeline-line {
+    position: absolute;
+    left: 54px;
+    top: 40px;
+    bottom: 40px;
+    width: 6px;
+    background: linear-gradient(180deg, #2563eb 0%, #7c3aed 50%, #059669 100%);
+    z-index: 1;
+    border-radius: 6px;
+  }
+
+  .gate-card {
+    background: #ffffff;
+    border: 3px solid #e2e8f0;
+    border-radius: 24px;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    position: relative;
+    z-index: 2;
+  }
+
+  .gate-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    font-weight: 900;
+    flex-shrink: 0;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  }
+
+  .g1 .gate-avatar { background: #eff6ff; color: #1d4ed8; border: 3.5px solid #bfdbfe; }
+  .g2 .gate-avatar { background: #f5f3ff; color: #6d28d9; border: 3.5px solid #ddd6fe; }
+  .g3 .gate-avatar { background: #ecfdf5; color: #047857; border: 3.5px solid #a7f3d0; }
+  .g4 .gate-avatar { background: #fff7ed; color: #c2410c; border: 3.5px solid #fed7aa; }
+  .g5 .gate-avatar { background: #eef2ff; color: #4338ca; border: 3.5px solid #c7d2fe; }
+  .g6 .gate-avatar { background: #fdf2f8; color: #be185d; border: 3.5px solid #fbcfe8; }
+
+  .gate-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .gate-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .gate-title {
+    font-size: 30px;
+    font-weight: 900;
+    color: #0f172a;
+  }
+
+  .gate-tag {
+    font-size: 20px;
+    font-weight: 900;
+    padding: 4px 16px;
+    border-radius: 12px;
+  }
+
+  .g1 .gate-tag { background: #dbeafe; color: #1e40af; }
+  .g2 .gate-tag { background: #ede9fe; color: #5b21b6; }
+  .g3 .gate-tag { background: #d1fae5; color: #065f46; }
+  .g4 .gate-tag { background: #ffedd5; color: #9a3412; }
+  .g5 .gate-tag { background: #e0e7ff; color: #3730a3; }
+  .g6 .gate-tag { background: #fce7f3; color: #9d174d; }
+
+  .gate-chips-row {
+    display: flex;
+    gap: 12px;
+  }
+
+  .gate-chip {
+    background: #f8fafc;
+    border: 2px solid #cbd5e1;
+    color: #1e293b;
+    font-size: 22px;
+    font-weight: 900;
+    padding: 6px 18px;
+    border-radius: 12px;
+  }
+
+  /* 中欄：AI Agent 執行環境 */
+  .center-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+  }
+
+  /* 使用者頂部入口 */
+  .user-portal {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 3.5px solid #38bdf8;
+    border-radius: 24px;
+    padding: 16px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.15);
+  }
+
+  .portal-brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-size: 32px;
+    font-weight: 900;
+    color: #0369a1;
+  }
+
+  .portal-flows {
+    display: flex;
+    gap: 40px;
+    font-size: 26px;
+    font-weight: 900;
+  }
+
+  .in-flow { color: #0284c7; display: flex; align-items: center; gap: 10px; }
+  .out-flow { color: #059669; display: flex; align-items: center; gap: 10px; }
+
+  /* 執行環境主矩陣 (5欄大字體結構) */
+  .runtime-stage-v6 {
+    border: 3.5px dashed #94a3b8;
+    background: #f8fafc;
+    border-radius: 28px;
+    padding: 22px;
+    display: grid;
+    grid-template-columns: 130px 450px 410px 450px 130px;
+    gap: 20px;
+    height: 1070px;
+    align-items: stretch;
+  }
+
+  /* 左右側翼大立體標籤 */
+  .flank-guard {
+    background: #ffffff;
+    border: 3.5px solid #f43f5e;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 8px;
+    box-shadow: 0 10px 30px rgba(244, 63, 94, 0.1);
+    gap: 24px;
+    text-align: center;
+  }
+
+  .flank-guard .flank-icon {
+    width: 76px;
+    height: 76px;
+    border-radius: 22px;
+    background: #ffe4e6;
+    color: #e11d48;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flank-guard .flank-text {
+    font-size: 36px;
+    font-weight: 900;
+    color: #9f1239;
+    writing-mode: vertical-rl;
+    letter-spacing: 10px;
+  }
+
+  .flank-guard .flank-badge {
+    font-size: 20px;
+    font-weight: 900;
+    color: #be123c;
+    background: #fff1f2;
+    padding: 10px 8px;
+    border-radius: 12px;
+    writing-mode: vertical-rl;
+    letter-spacing: 4px;
+  }
+
+  .flank-obs {
+    background: #ffffff;
+    border: 3.5px solid #10b981;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 8px;
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
+    gap: 24px;
+    text-align: center;
+  }
+
+  .flank-obs .flank-icon {
+    width: 76px;
+    height: 76px;
+    border-radius: 22px;
+    background: #d1fae5;
+    color: #059669;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flank-obs .flank-text {
+    font-size: 36px;
+    font-weight: 900;
+    color: #065f46;
+    writing-mode: vertical-rl;
+    letter-spacing: 10px;
+  }
+
+  .flank-obs .flank-badge {
+    font-size: 20px;
+    font-weight: 900;
+    color: #047857;
+    background: #ecfdf5;
+    padding: 10px 8px;
+    border-radius: 12px;
+    writing-mode: vertical-rl;
+    letter-spacing: 4px;
+  }
+
+  /* 模組列 */
+  .col-left-modules, .col-right-modules {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .mod-card {
+    background: #ffffff;
+    border: 3.5px solid #e2e8f0;
+    border-radius: 24px;
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 495px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+  }
+
+  .mod-card.m1 { border-color: #3b82f6; }
+  .mod-card.m2 { border-color: #eab308; }
+  .mod-card.m3 { border-color: #22c55e; }
+  .mod-card.m4 { border-color: #a855f7; }
+
+  .mod-top {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .mod-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .m1 .mod-icon { background: #eff6ff; color: #1d4ed8; }
+  .m2 .mod-icon { background: #fefce8; color: #ca8a04; }
+  .m3 .mod-icon { background: #f0fdf4; color: #15803d; }
+  .m4 .mod-icon { background: #faf5ff; color: #7e22ce; }
+
+  .mod-title-box {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mod-name {
+    font-size: 36px;
+    font-weight: 900;
+    color: #0f172a;
+  }
+
+  .mod-role {
+    font-size: 22px;
+    font-weight: 900;
+    color: #64748b;
+  }
+
+  .mod-tags-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 12px 0;
+  }
+
+  .mod-key-tag {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 12px 18px;
+    font-size: 24px;
+    font-weight: 900;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .m1 .mod-key-tag { border-left: 8px solid #2563eb; }
+  .m2 .mod-key-tag { border-left: 8px solid #ca8a04; }
+  .m3 .mod-key-tag { border-left: 8px solid #16a34a; }
+  .m4 .mod-key-tag { border-left: 8px solid #9333ea; }
+
+  .mod-footer-note {
+    font-size: 20px;
+    font-weight: 900;
+    padding-top: 12px;
+    border-top: 2.5px dashed #e2e8f0;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* 中央核心迭代循環 */
+  .col-center-loop {
+    background: #ffffff;
+    border: 4.5px solid #6366f1;
+    border-radius: 28px;
+    box-shadow: 0 16px 40px rgba(99, 102, 241, 0.25);
+    padding: 24px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+  }
+
+  .loop-center-title {
+    font-size: 36px;
+    font-weight: 900;
+    color: #312e81;
+  }
+
+  .loop-center-subtitle {
+    font-size: 22px;
+    font-weight: 900;
+    color: #6366f1;
+    background: #eef2ff;
+    padding: 6px 22px;
+    border-radius: 30px;
+    margin-top: 4px;
+  }
+
+  /* 環狀三節點大卡片 */
+  .stage-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  .stage-box-big {
+    border: 3.5px solid #e2e8f0;
+    border-radius: 22px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+    text-align: left;
+  }
+
+  .sb-obs { border-color: #c4b5fd; background: #faf5ff; }
+  .sb-think { border-color: #93c5fd; background: #eff6ff; }
+  .sb-act { border-color: #86efac; background: #f0fdf4; }
+
+  .sb-icon-round {
+    width: 58px;
+    height: 58px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .sb-obs .sb-icon-round { background: #7c3aed; color: #ffffff; }
+  .sb-think .sb-icon-round { background: #2563eb; color: #ffffff; }
+  .sb-act .sb-icon-round { background: #16a34a; color: #ffffff; }
+
+  .sb-text-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: #0f172a;
+  }
+
+  .sb-text-sub {
+    font-size: 20px;
+    font-weight: 800;
+    color: #475569;
+  }
+
+  .loop-arrow-down {
+    display: flex;
+    justify-content: center;
+    color: #6366f1;
+  }
+
+  .loop-bot-tag {
+    font-size: 21px;
+    font-weight: 900;
+    color: #312e81;
+    background: #e0e7ff;
+    padding: 10px 18px;
+    border-radius: 14px;
+    width: 100%;
+  }
+
+  /* 底層實體資源大卡片 */
+  .bottom-resource-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .resource-box {
+    background: #ffffff;
+    border: 3.5px solid #cbd5e1;
+    border-radius: 24px;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+  }
+
+  .resource-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .resource-name {
+    font-size: 28px;
+    font-weight: 900;
+    color: #0f172a;
+  }
+
+  .resource-desc {
+    font-size: 21px;
+    font-weight: 800;
+    color: #64748b;
+  }
+
+  /* 右欄：五層縱深防禦架構 (L1~L5) */
+  .layers-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    position: relative;
+  }
+
+  .layer-spine-line {
+    position: absolute;
+    right: 52px;
+    top: 40px;
+    bottom: 40px;
+    width: 6px;
+    background: linear-gradient(180deg, #1e293b 0%, #0d9488 25%, #d97706 50%, #0284c7 75%, #7c3aed 100%);
+    z-index: 1;
+    border-radius: 6px;
+  }
+
+  .layer-card-modern {
+    background: #ffffff;
+    border: 3px solid #e2e8f0;
+    border-radius: 24px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    position: relative;
+    z-index: 2;
+    border-left: 12px solid #cbd5e1;
+  }
+
+  .lc-1 { border-left-color: #1e293b; }
+  .lc-2 { border-left-color: #0d9488; }
+  .lc-3 { border-left-color: #d97706; }
+  .lc-4 { border-left-color: #0284c7; }
+  .lc-5 { border-left-color: #7c3aed; }
+
+  .layer-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .layer-title-badge-group {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .badge-layer-id {
+    font-size: 26px;
+    font-weight: 900;
+    color: #ffffff;
+    padding: 6px 20px;
+    border-radius: 14px;
+  }
+
+  .lc-1 .badge-layer-id { background: #1e293b; }
+  .lc-2 .badge-layer-id { background: #0d9488; }
+  .lc-3 .badge-layer-id { background: #d97706; }
+  .lc-4 .badge-layer-id { background: #0284c7; }
+  .lc-5 .badge-layer-id { background: #7c3aed; }
+
+  .layer-name-main {
+    font-size: 32px;
+    font-weight: 900;
+    color: #0f172a;
+  }
+
+  .layer-shield-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #f8fafc;
+    border: 3px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #475569;
+  }
+
+  .layer-tags-grid {
+    display: flex;
+    gap: 12px;
+  }
+
+  .layer-tag-pill {
+    font-size: 22px;
+    font-weight: 900;
+    padding: 6px 18px;
+    border-radius: 12px;
+  }
+
+  .lc-1 .layer-tag-pill { background: #f1f5f9; color: #1e293b; border: 2px solid #cbd5e1; }
+  .lc-2 .layer-tag-pill { background: #f0fdfa; color: #0f766e; border: 2px solid #99f6e4; }
+  .lc-3 .layer-tag-pill { background: #fffbeb; color: #b45309; border: 2px solid #fde68a; }
+  .lc-4 .layer-tag-pill { background: #f0f9ff; color: #0369a1; border: 2px solid #bae6fd; }
+  .lc-5 .layer-tag-pill { background: #faf5ff; color: #6d28d9; border: 2px solid #e9d5ff; }
+
+  /* 底部四大防禦支柱 */
+  .footer-pillars {
+    height: 195px;
+    margin-top: 24px;
+    background: #ffffff;
+    border: 3.5px solid #cbd5e1;
+    border-radius: 28px;
+    padding: 18px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.04);
+    flex-shrink: 0;
+  }
+
+  .pillars-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .pillars-heading {
+    font-size: 30px;
+    font-weight: 900;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .pillars-legend {
+    font-size: 24px;
+    font-weight: 900;
+    color: #475569;
+  }
+
+  .pillars-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 26px;
+  }
+
+  .pillar-feature-card {
+    background: #f8fafc;
+    border: 2.5px solid #e2e8f0;
+    border-radius: 22px;
+    padding: 16px 24px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .pillar-ico {
+    width: 66px;
+    height: 66px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .fc-1 .pillar-ico { background: #eff6ff; color: #1d4ed8; }
+  .fc-2 .pillar-ico { background: #ecfdf5; color: #047857; }
+  .fc-3 .pillar-ico { background: #fff7ed; color: #c2410c; }
+  .fc-4 .pillar-ico { background: #fdf2f8; color: #be185d; }
+
+  .pillar-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .pillar-title-text {
+    font-size: 28px;
+    font-weight: 900;
+    color: #0f172a;
+  }
+
+  .pillar-desc-text {
+    font-size: 21px;
+    font-weight: 800;
+    color: #475569;
+  }
+
+  svg {
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+  <!-- 頂部標題列 -->
+  <header class="header">
+    <div class="header-left">
+      <div class="title-row">
+        <h1 class="title-text">AI Agent 安全架構與縱深防禦全景圖</h1>
+        <div class="title-tag">Harness 治理規範</div>
+      </div>
+      <div class="header-subtitle">
+        自主運行環境 • 全生命週期防護外框 • 五層縱深防禦體系
+      </div>
+    </div>
+    <div class="header-badges">
+      <div class="badge-item active">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        ISO 42001 人工智慧治理
+      </div>
+      <div class="badge-item">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        OWASP 代理人安全標準
+      </div>
+      <div class="badge-item">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        DISA 四階密級保護
+      </div>
+    </div>
+  </header>
+
+  <!-- 主體三大板塊 -->
+  <main class="main-grid">
+
+    <!-- 左欄：Harness 治理外框 (6大防護閘門) -->
+    <section class="section-card">
+      <div class="section-header">
+        <div class="header-title-box">
+          <div class="icon-square" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          </div>
+          <div class="title-primary">Harness 治理外框</div>
+        </div>
+        <span class="header-subbadge">六大安全閘門</span>
+      </div>
+
+      <div class="gates-container">
+        <div class="gate-pipeline-line"></div>
+
+        <!-- 01 -->
+        <div class="gate-card g1">
+          <div class="gate-avatar">01</div>
+          <div class="gate-info">
+            <div class="gate-head">
+              <div class="gate-title">輸入防護與敏感遮蔽</div>
+              <span class="gate-tag">邊界防禦</span>
+            </div>
+            <div class="gate-chips-row">
+              <span class="gate-chip">提示詞防注入</span>
+              <span class="gate-chip">越獄攻擊攔截</span>
+              <span class="gate-chip">個資去識別化</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 02 -->
+        <div class="gate-card g2">
+          <div class="gate-avatar">02</div>
+          <div class="gate-info">
+            <div class="gate-head">
+              <div class="gate-title">代理迴圈與狀態控制</div>
+              <span class="gate-tag">運行調控</span>
+            </div>
+            <div class="gate-chips-row">
+              <span class="gate-chip">生命週期鉤子</span>
+              <span class="gate-chip">防迷路重複偵測</span>
+              <span class="gate-chip">步驟上限熔斷</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="gate-card g3">
+          <div class="gate-avatar">03</div>
+          <div class="gate-info">
+            <div class="gate-head">
+              <div class="gate-title">工具閘道與動態權限</div>
+              <span class="gate-tag">沙箱隔離</span>
+            </div>
+            <div class="gate-chips-row">
+              <span class="gate-chip">最小權限原則</span>
+              <span class="gate-chip">參數型別校驗</span>
+              <span class="gate-chip">容器沙箱隔離</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 04 -->
+        <div class="gate-card g4">
+          <div class="gate-avatar">04</div>
+          <div class="gate-info">
+            <div class="gate-head">
+              <div class="gate-title">高風險人機協同審批</div>
+              <span class="gate-tag">人工簽核</span>
+            </div>
+            <div class="gate-chips-row">
+              <span class="gate-chip">高危操作暫停</span>
+              <span class="gate-chip">等待管理員簽核</span>
+              <span class="gate-chip">雙重授權確認</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 05 -->
+        <div class="gate-card g5">
+          <div class="gate-avatar">05</div>
+          <div class="gate-info">
+            <div class="gate-head">
+              <div class="gate-title">輸出校驗與自我修正</div>
+              <span class="gate-tag">合規校驗</span>
+            </div>
+            <div class="gate-chips-row">
+              <span class="gate-chip">結構化精確解析</span>
+              <span class="gate-chip">幻覺事實對齊</span>
+              <span class="gate-chip">格式偏誤修復</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 06 -->
+        <div class="gate-card g6">
+          <div class="gate-avatar">06</div>
+          <div class="gate-info">
+            <div class="gate-head">
+              <div class="gate-title">記憶隔離與審計日誌</div>
+              <span class="gate-tag">軌跡留痕</span>
+            </div>
+            <div class="gate-chips-row">
+              <span class="gate-chip">多租戶實體隔離</span>
+              <span class="gate-chip">完整推論留存</span>
+              <span class="gate-chip">不可篡改稽核</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 中欄：AI Agent 執行環境 (運行中樞) -->
+    <section class="section-card" style="border-color: #cbd5e1;">
+      <div class="section-header">
+        <div class="header-title-box">
+          <div class="icon-square" style="background: linear-gradient(135deg, #7c3aed, #6366f1);">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+          </div>
+          <div class="title-primary">AI Agent 執行環境</div>
+        </div>
+        <span class="header-subbadge" style="background:#eff6ff; color:#1d4ed8; border-color:#93c5fd;">核心運行中樞</span>
+      </div>
+
+      <div class="center-container">
+        
+        <!-- 使用者介面入口 -->
+        <div class="user-portal">
+          <div class="portal-brand">
+            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            使用者 / 企業應用端點
+          </div>
+          <div class="portal-flows">
+            <div class="in-flow">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+              任務輸入（語意檢驗）
+            </div>
+            <div class="out-flow">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+              成果輸出（合規防外洩）
+            </div>
+          </div>
+        </div>
+
+        <!-- 運行環境主矩陣 -->
+        <div class="runtime-stage-v6">
+          
+          <!-- 1. 左翼：安全護欄 -->
+          <div class="flank-guard">
+            <div class="flank-icon">
+              <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="flank-text">安全護欄</div>
+            <div class="flank-badge">全週期防護</div>
+          </div>
+
+          <!-- 2. 左側模組：模型介面 + 狀態記憶 -->
+          <div class="col-left-modules">
+            
+            <!-- 模型介面 (大腦) -->
+            <div class="mod-card m1">
+              <div>
+                <div class="mod-top">
+                  <div class="mod-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04Z"/></svg>
+                  </div>
+                  <div class="mod-title-box">
+                    <div class="mod-name">模型介面</div>
+                    <div class="mod-role">中樞大腦 • 模型通訊</div>
+                  </div>
+                </div>
+                <div class="mod-tags-container">
+                  <div class="mod-key-tag">智慧模型路由分發</div>
+                  <div class="mod-key-tag">多層提示詞與角色設定</div>
+                  <div class="mod-key-tag">結構化輸出與函數校驗</div>
+                </div>
+              </div>
+              <div class="mod-footer-note">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.6"><polyline points="9 18 15 12 9 6"/></svg>
+                驅動情境思考與推理決策
+              </div>
+            </div>
+
+            <!-- 狀態與記憶 (記憶) -->
+            <div class="mod-card m3">
+              <div>
+                <div class="mod-top">
+                  <div class="mod-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                  </div>
+                  <div class="mod-title-box">
+                    <div class="mod-name">狀態與記憶</div>
+                    <div class="mod-role">長期記憶 • 上下文保證</div>
+                  </div>
+                </div>
+                <div class="mod-tags-container">
+                  <div class="mod-key-tag">即時工作記憶窗口</div>
+                  <div class="mod-key-tag">短期狀態機與任務草稿</div>
+                  <div class="mod-key-tag">長期向量庫與知識圖譜</div>
+                </div>
+              </div>
+              <div class="mod-footer-note">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.6"><polyline points="9 18 15 12 9 6"/></svg>
+                底層持久化知識安全隔離
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 3. 中央核心：迭代循環 (心臟) -->
+          <div class="col-center-loop">
+            <div>
+              <div class="loop-center-title">迭代循環</div>
+              <div class="loop-center-subtitle">核心心臟 • 自主迴圈</div>
+            </div>
+
+            <div class="stage-stack">
+              <!-- 階段 1 -->
+              <div class="stage-box-big sb-obs">
+                <div class="sb-icon-round">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/></svg>
+                </div>
+                <div>
+                  <div class="sb-text-title">環境觀察感知</div>
+                  <div class="sb-text-sub">多模態輸入 • 狀態反饋</div>
+                </div>
+              </div>
+
+              <div class="loop-arrow-down">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+              </div>
+
+              <!-- 階段 2 -->
+              <div class="stage-box-big sb-think">
+                <div class="sb-icon-round">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                </div>
+                <div>
+                  <div class="sb-text-title">情境思考推論</div>
+                  <div class="sb-text-sub">任務拆解 • 工具決策</div>
+                </div>
+              </div>
+
+              <div class="loop-arrow-down">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+              </div>
+
+              <!-- 階段 3 -->
+              <div class="stage-box-big sb-act">
+                <div class="sb-icon-round">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </div>
+                <div>
+                  <div class="sb-text-title">安全行動執行</div>
+                  <div class="sb-text-sub">沙箱調用 • 系統變更</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="loop-bot-tag">
+              全自主迭代 ⇄ 異常即時熔斷
+            </div>
+          </div>
+
+          <!-- 4. 右側模組：工具系統 + 編排規劃 -->
+          <div class="col-right-modules">
+            
+            <!-- 工具系統 (手腳) -->
+            <div class="mod-card m2">
+              <div>
+                <div class="mod-top">
+                  <div class="mod-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                  </div>
+                  <div class="mod-title-box">
+                    <div class="mod-name">工具系統</div>
+                    <div class="mod-role">行動手腳 • 介面調用</div>
+                  </div>
+                </div>
+                <div class="mod-tags-container">
+                  <div class="mod-key-tag">工具註冊與動態發現</div>
+                  <div class="mod-key-tag">標準協定與資料格式</div>
+                  <div class="mod-key-tag">非阻塞異步執行排程</div>
+                </div>
+              </div>
+              <div class="mod-footer-note">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ca8a04" stroke-width="2.6"><polyline points="9 18 15 12 9 6"/></svg>
+                容器映像檔與沙箱隔離
+              </div>
+            </div>
+
+            <!-- 編排與規劃 (關節) -->
+            <div class="mod-card m4">
+              <div>
+                <div class="mod-top">
+                  <div class="mod-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg>
+                  </div>
+                  <div class="mod-title-box">
+                    <div class="mod-name">編排與規劃</div>
+                    <div class="mod-role">協同關節 • 任務分解</div>
+                  </div>
+                </div>
+                <div class="mod-tags-container">
+                  <div class="mod-key-tag">目標自動拆解為子任務</div>
+                  <div class="mod-key-tag">動態重規劃自我微調</div>
+                  <div class="mod-key-tag">多代理協同調度通訊</div>
+                </div>
+              </div>
+              <div class="mod-footer-note">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2.6"><polyline points="9 18 15 12 9 6"/></svg>
+                跨系統工作流智慧調度
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 5. 右翼：可觀測性 -->
+          <div class="flank-obs">
+            <div class="flank-icon">
+              <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="12" cy="12" r="10"/><path d="m12 6 0 6 4 2"/></svg>
+            </div>
+            <div class="flank-text">可觀測性</div>
+            <div class="flank-badge">日誌指標回放</div>
+          </div>
+
+        </div>
+
+        <!-- 底部實體資源連接 -->
+        <div class="bottom-resource-grid">
+          <div class="resource-box">
+            <div class="resource-icon" style="color: #2563eb;">
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            </div>
+            <div>
+              <div class="resource-name">持久化資料庫與知識儲存</div>
+              <div class="resource-desc">關聯式資料庫 • 向量記憶庫 • 分級知識檔案庫</div>
+            </div>
+          </div>
+          <div class="resource-box">
+            <div class="resource-icon" style="color: #059669;">
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div>
+              <div class="resource-name">外部系統與沙箱執行環境</div>
+              <div class="resource-desc">企業內部介面閘道 • 標準化容器沙箱安全隔離</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 右欄：五層縱深防禦 (L1~L5) -->
+    <section class="section-card">
+      <div class="section-header">
+        <div class="header-title-box">
+          <div class="icon-square" style="background: linear-gradient(135deg, #059669, #047857);">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </div>
+          <div class="title-primary">五層縱深防禦</div>
+        </div>
+        <span class="header-subbadge">立體防禦架構</span>
+      </div>
+
+      <div class="layers-container">
+        <div class="layer-spine-line"></div>
+
+        <!-- L1 -->
+        <div class="layer-card-modern lc-1">
+          <div class="layer-header-row">
+            <div class="layer-title-badge-group">
+              <span class="badge-layer-id">L1</span>
+              <div class="layer-name-main">通用模型層</div>
+            </div>
+            <div class="layer-shield-box">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+          </div>
+          <div class="layer-tags-grid">
+            <span class="layer-tag-pill">單一出口閘道</span>
+            <span class="layer-tag-pill">雙向語意審核</span>
+            <span class="layer-tag-pill">呼叫配額控制</span>
+          </div>
+        </div>
+
+        <!-- L2 -->
+        <div class="layer-card-modern lc-2">
+          <div class="layer-header-row">
+            <div class="layer-title-badge-group">
+              <span class="badge-layer-id">L2</span>
+              <div class="layer-name-main">領域模型層</div>
+            </div>
+            <div class="layer-shield-box">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+          </div>
+          <div class="layer-tags-grid">
+            <span class="layer-tag-pill">專屬語料微調</span>
+            <span class="layer-tag-pill">存取權限控制</span>
+            <span class="layer-tag-pill">獨立模型分艙</span>
+          </div>
+        </div>
+
+        <!-- L3 -->
+        <div class="layer-card-modern lc-3">
+          <div class="layer-header-row">
+            <div class="layer-title-badge-group">
+              <span class="badge-layer-id">L3</span>
+              <div class="layer-name-main">代理人執行層</div>
+            </div>
+            <div class="layer-shield-box">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+          </div>
+          <div class="layer-tags-grid">
+            <span class="layer-tag-pill">受控思考迴圈</span>
+            <span class="layer-tag-pill">記憶實體隔離</span>
+            <span class="layer-tag-pill">多代理階層調度</span>
+          </div>
+        </div>
+
+        <!-- L4 -->
+        <div class="layer-card-modern lc-4">
+          <div class="layer-header-row">
+            <div class="layer-title-badge-group">
+              <span class="badge-layer-id">L4</span>
+              <div class="layer-name-main">技能工具層</div>
+            </div>
+            <div class="layer-shield-box">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+          </div>
+          <div class="layer-tags-grid">
+            <span class="layer-tag-pill">最小權限核發</span>
+            <span class="layer-tag-pill">安全沙箱隔離</span>
+            <span class="layer-tag-pill">內部介面防護</span>
+          </div>
+        </div>
+
+        <!-- L5 -->
+        <div class="layer-card-modern lc-5">
+          <div class="layer-header-row">
+            <div class="layer-title-badge-group">
+              <span class="badge-layer-id">L5</span>
+              <div class="layer-name-main">領域知識庫層</div>
+            </div>
+            <div class="layer-shield-box">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+          </div>
+          <div class="layer-tags-grid">
+            <span class="layer-tag-pill">資料防洩保護</span>
+            <span class="layer-tag-pill">四階密級標籤</span>
+            <span class="layer-tag-pill">秘密專庫隔離</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 底部四大核心防禦支柱 -->
+  <footer class="footer-pillars">
+    <div class="pillars-meta-row">
+      <div class="pillars-heading">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        全架構四大核心安全支柱（文件精髓）
+      </div>
+      <div class="pillars-legend">
+        落實零信任治理理念 • 確保企業級 AI Agent 自主落地
+      </div>
+    </div>
+
+    <div class="pillars-cards-grid">
+      <!-- 1 -->
+      <div class="pillar-feature-card fc-1">
+        <div class="pillar-ico">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        </div>
+        <div class="pillar-details">
+          <div class="pillar-title-text">模型分層</div>
+          <div class="pillar-desc-text">通用大模型與專屬微調模型分艙隔離</div>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="pillar-feature-card fc-2">
+        <div class="pillar-ico">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="pillar-details">
+          <div class="pillar-title-text">資料分級</div>
+          <div class="pillar-desc-text">四階密級標籤，核心秘密專庫嚴密隔離</div>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="pillar-feature-card fc-3">
+        <div class="pillar-ico">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div class="pillar-details">
+          <div class="pillar-title-text">單一閘道</div>
+          <div class="pillar-desc-text">內外網單一出入口，入向掃描出向防洩</div>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="pillar-feature-card fc-4">
+        <div class="pillar-ico">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="pillar-details">
+          <div class="pillar-title-text">強制護欄</div>
+          <div class="pillar-desc-text">標準化容器沙箱隔離，異常暴衝自動熔斷</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+{
+  "roe-safety-guard": {
+    "enabled": true,
+    "description": "國防交戰規則 (ROE) 與資料分級強制安全前置攔截護欄 (Pre-Tool Hook)",
+    "PreToolUse": [
+      {
+        "matcher": "terminal_weapons_release",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "verify_cde_and_clearance",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "query_theater_strategic_radar_db",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "enforce_abac_classification",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  },
+  "tactical-audit-telemetry": {
+    "enabled": true,
+    "description": "擊殺鏈每一步驟之遙測遙控、延遲統計與 SOC 留痕後置鉤子 (Post-Tool Hook)",
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "record_soc_audit_telemetry",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "flight-safety-governor": {
+    "enabled": true,
+    "description": "飛控姿態極限限制與禁航區 (NFZ) 預防防護鉤子",
+    "PreToolUse": [
+      {
+        "matcher": "flight_control_adjust_attitude",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "check_flight_envelope_and_nfz",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  }
+}

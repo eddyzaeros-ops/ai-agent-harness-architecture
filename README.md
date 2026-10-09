@@ -51,6 +51,27 @@
 
 ---
 
+---
+
+## 🗂️ 全系列對話歷程歸檔與模組目錄 (Conversation Modules & Artifacts)
+
+本倉庫完整歸檔本專案執行過程中產生的 **31 篇 Markdown 研析文檔、Python 核心代碼、HTML 互動式儀表板、Word (.docx) 審計留痕報告、PowerPoint (.pptx) 簡報與 4K 戰術資訊圖表**。依照對話執行歷程與技術範疇獨立劃分為以下模組資料夾：
+
+| 對話資料夾 | 涵蓋對話輪次 | 模組主題說明 | 核心產出物類型 | 版本狀態 |
+| :--- | :--- | :--- | :--- | :--- |
+| [📁 Turn-00-Index-and-Dashboard](./Turn-00-Index-and-Dashboard) | Turn 00 | AI Agent Framework 知識圖譜導航與視覺化儀表板 | md, html, py, ssets | 1.2.0 ✅ |
+| [📁 Turn-01-LangChain-vs-DeepAgents](./Turn-01-LangChain-vs-DeepAgents) | Turn 01 | LangChain vs DeepAgents 架構評估與治理觀點 | md, ssets | 1.0.0 ✅ |
+| [📁 Turn-02-to-03-Opus-Deep-Analysis](./Turn-02-to-03-Opus-Deep-Analysis) | Turn 02 ~ 03 | Opus 深度研析與任務規劃架構深化 | md, docx | 1.0.0 ✅ |
+| [📁 Turn-04-to-05-DeepAgents-Audit-Implementation](./Turn-04-to-05-DeepAgents-Audit-Implementation) | Turn 04 ~ 05 | DeepAgents 企業級資安審計 Agent 實作與留痕 | md, py, docx | 1.1.0 ✅ |
+| [📁 Turn-06-to-11-Enterprise-Harness-and-Sandbox](./Turn-06-to-11-Enterprise-Harness-and-Sandbox) | Turn 06 ~ 11 | 企業內部雙軌 Harness 與 gVisor 三重沙箱隔離架構 | md, docx, pptx, ssets | 1.3.0 ✅ |
+| [📁 Turn-12-to-14-Harness-Architecture-and-Comparison](./Turn-12-to-14-Harness-Architecture-and-Comparison) | Turn 12 ~ 14 | 企業需求矩陣與 OpenCode / Claude Code 開源架構對比 | md, pptx, ssets | 1.1.0 ✅ |
+| [📁 Turn-15-to-20-Defense-in-Depth-and-4K-Guard](./Turn-15-to-20-Defense-in-Depth-and-4K-Guard) | Turn 15 ~ 20 | 五層縱深防禦架構與 4K 防護框架 Harness 全景圖 | md, html, ssets | 2.0.0 ✅ |
+| [📁 Turn-21-to-22-Summary-Reports-and-Audit-Export](./Turn-21-to-22-Summary-Reports-and-Audit-Export) | Turn 21~22, 28 | 全服務鏈資料流總結報告與全歷程 Docx 格式化留痕 | md, docx, pptx | 2.1.0 ✅ |
+| [📁 Turn-23-to-27-UAV-F2T2EA-Killchain-v1](./Turn-23-to-27-UAV-F2T2EA-Killchain-v1) | Turn 23 ~ 27 | 無人機 F2T2EA 自主擊殺鏈實戰 Agent 與 4K 戰術資訊圖表 | md, py, pptx, ssets | 1.0.0 ✅ |
+| [📁 Turn-29-UAV-F2T2EA-v2-Skills-Hooks-Lattice](./Turn-29-UAV-F2T2EA-v2-Skills-Hooks-Lattice) | Turn 29 | 無人機 F2T2EA v2 架構演進：Skills、Hooks 與 Lattice 深度模擬 | md, py, json, ssets | 2.0.0 ✅ |
+
+> 💡 **版本管理與留痕規範**：各模組目錄內均附有專屬 README.md，提供嚴謹的**文件摘要**、**產出物清單**、**版本號碼標註**與**版本差異說明 (Changelog)**。
+
 ## 📚 參考文獻
 - 和達, 陶銳, 詹國梁, 等. 智能體駕馭工程：分析 Claude Code 技術實現 [J]. 通信技術, 2026, 59(7): 779-787.
 - Hashimoto M. My AI adoption journey, 2026.
