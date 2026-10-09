@@ -1,11 +1,24 @@
-# 💬 Turn-01-LangChain-vs-DeepAgents：完整對話紀錄留痕 (Dialogue Transcript)
+# 💬 Turn-01-LangChain-vs-DeepAgents：完整對話與問答留痕紀錄 (Dialogue Transcript)
 
-> 本檔案完整收錄此模組所涵蓋之對話輪次（Turn [1]）的原始需求指令、技術研析歷程與交談細節。
+> **涵蓋輪次**：Turn [1]  
+> **紀錄格式**：👤 使用者提問需求 (User Prompt) ➡️ 🤖 助理系統研析與交付成果 (Assistant Response)  
 
 ---
 
-# 第 1 輪對話紀錄 (Turn 1)
+## ━━━ 第 1 輪對話 (Turn 1) ━━━
 
+### 👤 使用者提問內容 (User Request)
+
+`	ext
+1. 讀取並深入理解，同時 visit 文章中所有的連結內容
+"https://wenwender.wordpress.com/2025/12/04/langchain-vs-langgraph-vs-deepagents%EF%BC%9A%E8%A9%B2%E9%81%B8%E5%93%AA%E5%80%8B-ai-agent-%E6%A1%86%E6%9E%B6%EF%BC%9F%E5%AE%8C%E6%95%B4%E5%A0%B4%E6%99%AF%E5%B0%8D%E6%AF%94%E6%8C%87%E5%8D%97/"
+2. 搜尋與 Langchain Deep Agents 相關的技術資源，包括 Github 的公開 repo
+3. 讀取 "D:\JavaDO\Harness\Deep Agents" 資料夾下的所有 md 檔
+深入研究後，從 AI Agent Harness 治理的觀點出發，提出 "Deep Agents.docx" 分析報告，並儲存在 D:\JavaDO\Harness\Deep Agents 資料夾中
+---
+`
+
+### 🤖 助理研析與執行成果 (Assistant Response)
 
 🤖 助理回應 (Assistant Response #1)　·　2026-09-09T21:55:22
 
@@ -120,6 +133,5 @@ ch09-human-in-the-loop：`interrupt_on` 風險中斷、直接放行、參數覆�
 文件路徑：[Deep Agents.docx](file:///D:/JavaDO/Harness/Deep%20Agents/Deep%20Agents.docx)
 
 檔案規格：約 58 KB，包含 121 個結構化段落、9 張專業格式化表格（含層級架構、Harness 競品對比、角色邊界、決策矩陣等）、深藍商務配色（Deep Navy `#1A365D` / Slate Blue `#2B6CB0`）、關鍵資安警告 Callout Box 以及程式碼範式區塊。
-
 
 ---

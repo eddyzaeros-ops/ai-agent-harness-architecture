@@ -1,11 +1,23 @@
-# 💬 Turn-06-to-11-Enterprise-Harness-and-Sandbox：完整對話紀錄留痕 (Dialogue Transcript)
+# 💬 Turn-06-to-11-Enterprise-Harness-and-Sandbox：完整對話與問答留痕紀錄 (Dialogue Transcript)
 
-> 本檔案完整收錄此模組所涵蓋之對話輪次（Turn [6, 7, 8, 9, 10, 11]）的原始需求指令、技術研析歷程與交談細節。
+> **涵蓋輪次**：Turn [6, 7, 8, 9, 10, 11]  
+> **紀錄格式**：👤 使用者提問需求 (User Prompt) ➡️ 🤖 助理系統研析與交付成果 (Assistant Response)  
 
 ---
 
-# 第 6 輪對話紀錄 (Turn 6)
+## ━━━ 第 6 輪對話 (Turn 6) ━━━
 
+### 👤 使用者提問內容 (User Request)
+
+`	ext
+評估企業內部開發 AI Agent 的 harness 環境，使用
+1. 現有的 Claude code、Open AI Codex、antigravity 2.0、open code
+2. 透過 Deep Agents 自行開發
+使用時機、優劣比較、建議方案
+---
+`
+
+### 🤖 助理研析與執行成果 (Assistant Response)
 
 🤖 助理回應 (Assistant Response #1)　·　2026-09-09T22:58:59
 
@@ -125,11 +137,24 @@
 
 將自訂的 Agent 能力標準化為可共享的 Agent Skills（`SKILL.md` 規範），實現全公司業務部門的 Agent 能力複用。
 
-
 ---
 
-# 第 7 輪對話紀錄 (Turn 7)
+## ━━━ 第 7 輪對話 (Turn 7) ━━━
 
+### 👤 使用者提問內容 (User Request)
+
+`	ext
+將本次對話生成 "設計文件.docx"，
+1. 所有圖表，請以 Gemini Nano Banana pro 生成資訊圖表，並放入 docx 中
+字體選擇：微軟正黑體 (Microsoft JhengHei)，確保文字邊緣極度銳利清晰。
+主色調：純白色
+版面風格：採用「資訊圖表化 (Infographic)」設計。減少純文字條列，多使用清晰易懂的高品質圖示、流程圖與連接線來表達複雜概念，應具備海報級的視覺衝擊力。
+解析度：畫布尺寸為寬螢幕 (16:9)，輸出設定務必選擇 4K (3840 x 2160)。
+中文顯示即可，不須在中文下方加上英文
+---
+`
+
+### 🤖 助理研析與執行成果 (Assistant Response)
 
 🤖 助理回應 (Assistant Response #1)　·　2026-09-09T23:10:41
 
@@ -185,11 +210,18 @@
 
 Opus 治理白皮書：[`Deep Agents_opus.docx`](file:///D:/JavaDO/Harness/Deep%20Agents/Deep%20Agents_opus.docx)（65.2 KB）
 
-
 ---
 
-# 第 8 輪對話紀錄 (Turn 8)
+## ━━━ 第 8 輪對話 (Turn 8) ━━━
 
+### 👤 使用者提問內容 (User Request)
+
+`	ext
+enterprise_audit_agent.py 執行後，產生的 audit_report.md 儲存在哪？
+---
+`
+
+### 🤖 助理研析與執行成果 (Assistant Response)
 
 🤖 助理回應 (Assistant Response #1)　·　2026-09-12T06:11:32
 
@@ -235,11 +267,18 @@ Opus 治理白皮書：[`Deep Agents_opus.docx`](file:///D:/JavaDO/Harness/Deep%
 
 採用此配置後，Agent 產生的所有 `/workspace/...` 檔案就會在執行時即時寫入本機的 `./workspace` 實體資料夾中。
 
-
 ---
 
-# 第 9 輪對話紀錄 (Turn 9)
+## ━━━ 第 9 輪對話 (Turn 9) ━━━
 
+### 👤 使用者提問內容 (User Request)
+
+`	ext
+如何說明 "enterprise_audit_agent.py" 中，工具呼叫是在 sandbox 中執行
+---
+`
+
+### 🤖 助理研析與執行成果 (Assistant Response)
 
 🤖 助理回應 (Assistant Response #1)　·　2026-09-12T06:22:43
 
@@ -311,11 +350,18 @@ Opus 治理白皮書：[`Deep Agents_opus.docx`](file:///D:/JavaDO/Harness/Deep%
 
 > 4. 生產環境可擴充性：後續若需開放 Agent 執行任意動態腳本，Deep Agents 原生支援無縫替換為 `DaytonaSandbox` 容器後端，將進程隔離至獨立的微型容器中。」
 
-
 ---
 
-# 第 10 輪對話紀錄 (Turn 10)
+## ━━━ 第 10 輪對話 (Turn 10) ━━━
 
+### 👤 使用者提問內容 (User Request)
+
+`	ext
+如何說明 "enterprise_audit_agent.py" 中的API 防護
+---
+`
+
+### 🤖 助理研析與執行成果 (Assistant Response)
 
 🤖 助理回應 (Assistant Response #1)　·　2026-09-12T06:43:59
 
@@ -413,11 +459,18 @@ Opus 治理白皮書：[`Deep Agents_opus.docx`](file:///D:/JavaDO/Harness/Deep%
 
 > 4. 在憑據與資料面：金鑰全面環境變數化，並以租戶命名空間隔絕儲存 API，杜絕跨客戶資料洩露。」
 
-
 ---
 
-# 第 11 輪對話紀錄 (Turn 11)
+## ━━━ 第 11 輪對話 (Turn 11) ━━━
 
+### 👤 使用者提問內容 (User Request)
+
+`	ext
+如何說明 "enterprise_audit_agent.py" 中的防幻覺及自我修正
+---
+`
+
+### 🤖 助理研析與執行成果 (Assistant Response)
 
 🤖 助理回應 (Assistant Response #1)　·　2026-09-12T06:53:29
 
@@ -524,6 +577,5 @@ Agent 嘗試調用 `write_file("/etc/corporate_secrets.key")`。
 > 3. 在自我修正方面（反饋閉環）：
 
 >    * 當 Agent 遭遇權限拒絕（如存取非授權路徑）或執行報錯時，能即時理解工具反饋並自動切換合規路徑；同時具備人機協同中斷機制，允許人工直接修正決策參數。」
-
 
 ---
